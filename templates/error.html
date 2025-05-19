@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}{{ error }} - Travel Weather API{% endblock %}
+
+{% block content %}
+<div class="error-container">
+    <div class="error-icon">
+        <i class="fas fa-exclamation-triangle"></i>
+    </div>
+
+    <div class="error-code">{{ error }}</div>
+
+    <div class="error-message">{{ message }}</div>
+
+    <a href="{{ url_for('index') }}" class="btn btn-primary">
+        <i class="fas fa-home me-1"></i>Return to Home
+    </a>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Get current year for footer
+    document.addEventListener('DOMContentLoaded', function() {
+        window.now = {
+            year: new Date().getFullYear()
+        };
+    });
+</script>
+{% endblock %}

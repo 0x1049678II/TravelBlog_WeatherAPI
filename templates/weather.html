@@ -1,0 +1,205 @@
+{% extends "base.html" %}
+
+{% block title %}Weather in {{ weather.location }}{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-12">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ url_for('index') }}">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ weather.location }}</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-lg-6">
+        <div class="card mb-4">
+            <div class="card-header bg-black text-white">
+                <h2 class="card-title mb-0">
+                    <i class="fas fa-map-marker-alt me-2"></i>{{ weather.location }}
+                </h2>
+            </div>
+            <div class="card-body weather-{{ weather.main_condition.main|lower }}">
+                <div class="row align-items-center">
+                    <div class="col-4 text-center">
+                        <img src="{{ weather.main_condition.icon_url }}" class="weather-icon" alt="{{ weather.main_condition.description }}">
+                    </div>
+                    <div class="col-8">
+                        <div class="temperature">{{ weather.temp }}°C</div>
+                        <div class="weather-description">{{ weather.main_condition.description }}</div>
+                        <div class="text-muted">Feels like {{ weather.feels_like }}°C</div>
+                    </div>
+                </div>
+
+                <hr>
+
+                <div class="row mt-3">
+                    <div class="col-6">
+                        <div class="mb-2">
+                            <i class="fas fa-tint me-2 text-primary"></i>Humidity: {{ weather.humidity }}%
+                        </div>
+                        <div class="mb-2">
+                            <i class="fas fa-wind me-2 text-primary"></i>Wind: {{ weather.wind_speed }} m/s
+                            <span class="wind-arrow">{{ weather.wind_deg|wind_direction_arrow }}</span>
+                        </div>
+                        <div class="mb-2">
+                            <i class="fas fa-cloud me-2 text-primary"></i>Clouds: {{ weather.clouds }}%
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="mb-2">
+                            <i class="fas fa-thermometer-half me-2 text-danger"></i>Max: {{ weather.temp_max }}°C
+                        </div>
+                        <div class="mb-2">
+                            <i class="fas fa-thermometer-quarter me-2 text-info"></i>Min: {{ weather.temp_min }}°C
+                        </div>
+                        <div class="mb-2">
+                            <i class="fas fa-compress-alt me-2 text-secondary"></i>Pressure: {{ weather.pressure }} hPa
+                        </div>
+                    </div>
+                </div>
+
+                <hr>
+
+                <div class="row mt-3">
+                    <div class="col-6">
+                        <div class="mb-2">
+                            <i class="fas fa-sun me-2 text-warning"></i>Sunrise: {{ weather.local_sunrise.strftime('%H:%M') }}
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="mb-2">
+                            <i class="fas fa-moon me-2 text-dark"></i>Sunset: {{ weather.local_sunset.strftime('%H:%M') }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-muted mt-3">
+                    <small>
+                        <i class="fas fa-clock me-1"></i>Last updated: {{ weather.local_time.strftime('%H:%M %d/%m/%Y') }}
+                    </small>
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="d-flex justify-content-end">
+                    <a href="{{ url_for('api_weather', location_name=weather.location|lower|replace(' ', '-')) }}" class="btn btn-outline-secondary" target="_blank">
+                        <i class="fas fa-code me-1"></i>API Response
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6">
+        <div class="card mb-4">
+            <div class="card-header bg-black text-white">
+                <h3 class="card-title mb-0">
+                    <i class="fas fa-map me-2"></i>Location Map
+                </h3>
+            </div>
+            <div class="card-body p-0">
+                <div id="map" class="map-container"></div>
+            </div>
+            <div class="card-footer">
+                <div class="row">
+                    <div class="col-6">
+                        <small>
+                            <i class="fas fa-map-pin me-1 text-danger"></i>Latitude: {{ location.lat }}
+                        </small>
+                    </div>
+                    <div class="col-6 text-end">
+                        <small>
+                            <i class="fas fa-map-pin me-1 text-danger"></i>Longitude: {{ location.lon }}
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header bg-black text-white">
+                <h3 class="card-title mb-0">
+                    <i class="fas fa-info-circle me-2"></i>Weather Information
+                </h3>
+            </div>
+            <div class="card-body">
+                <p>
+                    <strong>Current Weather:</strong> {{ weather.main_condition.description }}
+                </p>
+
+                <p>
+                    The current temperature in {{ weather.location }} is {{ weather.temp }}°C, with a humidity of {{ weather.humidity }}%.
+                    Wind is blowing at {{ weather.wind_speed }} m/s from the {{ weather.wind_direction }}.
+                </p>
+
+
+                <div class="alert alert-info">
+                    <i class="fas fa-lightbulb me-2"></i>
+                    {% if weather.is_daytime %}
+                    <strong>Tip:</strong> It's currently daytime in {{ weather.location }}. Great opportunity for outdoor photography!
+                    {% else %}
+                    <strong>Tip:</strong> It's currently night time in {{ weather.location }}. Consider indoor activities or night photography.
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="d-flex justify-content-between">
+            <a href="{{ url_for('index') }}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left me-1"></i>Back to Locations
+            </a>
+            <a href="{{ url_for('dashboard') }}" class="btn btn-primary">
+                <i class="fas fa-tachometer-alt me-1"></i>View All Locations
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Initialize map
+    document.addEventListener('DOMContentLoaded', function() {
+        // Get current year for footer
+        window.now = {
+            year: new Date().getFullYear()
+        };
+
+        // Create map
+        const map = L.map('map').setView([{{ location.lat }}, {{ location.lon }}], 10);
+
+        // Add tile layer
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        // Add marker
+        const marker = L.marker([{{ location.lat }}, {{ location.lon }}]).addTo(map);
+
+        // Add popup
+        marker.bindPopup(`
+            <strong>{{ weather.location }}</strong><br>
+            {{ weather.temp }}°C, {{ weather.main_condition.description }}<br>
+            <img src="{{ weather.main_condition.icon_url }}" width="30" height="30" alt="{{ weather.main_condition.description }}">
+        `).openPopup();
+
+        // Add weather layer
+        fetch(`https://tile.openweathermap.org/map/temp_new/{z}/{x}/{y}.png?appid={{ api_key }}`)
+            .then(response => {
+                if (response.ok) {
+                    L.tileLayer(`https://tile.openweathermap.org/map/temp_new/{z}/{x}/{y}.png?appid={{ api_key }}`, {
+                        opacity: 0.5
+                    }).addTo(map);
+                }
+            })
+            .catch(error => console.error('Error loading weather layer:', error));
+    });
+</script>
+{% endblock %}

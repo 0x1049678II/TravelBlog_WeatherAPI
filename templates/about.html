@@ -1,0 +1,267 @@
+{% extends "base.html" %}
+
+{% block title %}About - Cam's Weather Fetcher{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header bg-black text-white">
+                <h2 class="card-title mb-0">
+                    <i class="fas fa-info-circle me-2"></i>About This Application
+                </h2>
+            </div>
+            <div class="card-body">
+                <h3>Cam's Weather Fetcher</h3>
+                <p class="lead">
+                    This app provides a weather information service for a travel blogger exploring England,
+                    using Python, Flask, and the OpenWeatherMap API.
+                </p>
+
+                <hr>
+
+                <h4>Project Overview</h4>
+                <p>
+                    A travel blogger has been commissioned by a tourist website to explore England and post regular updates on their trip.
+                    Accurate and up-to-date weather information is critical for their blog content, helping readers plan their own visits
+                    and make informed travel decisions. The data assists the blogger in scheduling activities and avoiding
+                    adverse weather conditions.
+                </p>
+                <p>
+                    My flask-based solution retrieves weather data for each specific location on the travel blogger's itinerary and
+                    presents it in a user-friendly format.
+                </p>
+
+                <h4>Key Features</h4>
+                <div class="row mt-4">
+                    <div class="col-md-6">
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <h5><i class="fas fa-cloud-sun-rain text-primary me-2"></i>Real-time Weather Data</h5>
+                                <p>
+                                    Provides up-to-date weather information for all locations on the itinerary using the OpenWeatherMap API.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <h5><i class="fas fa-map-marked-alt text-primary me-2"></i>Interactive Maps</h5>
+                                <p>
+                                    Visualizes the locations on interactive maps with weather data overlays.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <h5><i class="fas fa-tachometer-alt text-primary me-2"></i>Dashboard</h5>
+                                <p>
+                                    Provides an overview of weather conditions across all locations for better planning.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <h4 class="mt-4">Technical Implementation</h4>
+                <p>
+                    This application is built using Python, Flask, and a few other web-centred languages/frameworks.:
+                </p>
+                <ul>
+                    <li><strong>Python:</strong> Core programming language</li>
+                    <li><strong>Flask:</strong> Web framework for creating the user interface and API endpoints</li>
+                    <li><strong>OpenWeatherMap API:</strong> Source of weather data for all locations</li>
+                    <li><strong>HTML/CSS/JavaScript:</strong> Frontend languages for creating the user interface</li>
+                    <li><strong>Bootstrap:</strong> Frontend framework for responsive design</li>
+                    <li><strong>Leaflet.js:</strong> Library for interactive maps</li>
+                    <li><strong>Chart.js:</strong> Library for data visualization</li>
+                </ul>
+
+                <h4 class="mt-4">Features</h4>
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <h5><i class="fas fa-bolt text-warning me-2"></i>Asynchronous API Calls</h5>
+                                <p>
+                                    I've implemented asynchronous programming to fetch weather data for multiple locations concurrently,
+                                    significantly improving performance.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <h5><i class="fas fa-database text-warning me-2"></i>Response Caching</h5>
+                                <p>
+                                    I've Implemented a caching mechanism to reduce API calls and improve response times.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <h5><i class="fas fa-shield-alt text-warning me-2"></i>Error Handling</h5>
+                                <p>
+                                     Error handling for API failures, rate limits, and invalid inputs.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <h5><i class="fas fa-chart-line text-warning me-2"></i>Data Visualization</h5>
+                                <p>
+                                    I've chucked in some Interactive charts and maps for visualizing weather data.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <h4 class="mt-4">Itinerary Locations</h4>
+                <p>
+                    This includes the following locations in England as per the Assignments instructions:
+                </p>
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Location</th>
+                                <th>Latitude</th>
+                                <th>Longitude</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Cumbria</td>
+                                <td>54.4609° N</td>
+                                <td>3.0886° W</td>
+                            </tr>
+                            <tr>
+                                <td>Corfe Castle</td>
+                                <td>50.6395° N</td>
+                                <td>2.0566° W</td>
+                            </tr>
+                            <tr>
+                                <td>The Cotswolds</td>
+                                <td>51.8330° N</td>
+                                <td>1.8433° W</td>
+                            </tr>
+                            <tr>
+                                <td>Cambridge</td>
+                                <td>52.2053° N</td>
+                                <td>0.1218° E</td>
+                            </tr>
+                            <tr>
+                                <td>Bristol</td>
+                                <td>51.4545° N</td>
+                                <td>2.5879° W</td>
+                            </tr>
+                            <tr>
+                                <td>Oxford</td>
+                                <td>51.7520° N</td>
+                                <td>1.2577° W</td>
+                            </tr>
+                            <tr>
+                                <td>Norwich</td>
+                                <td>52.6309° N</td>
+                                <td>1.2974° E</td>
+                            </tr>
+                            <tr>
+                                <td>Stonehenge</td>
+                                <td>51.1789° N</td>
+                                <td>1.8262° W</td>
+                            </tr>
+                            <tr>
+                                <td>Watergate Bay</td>
+                                <td>50.4429° N</td>
+                                <td>5.0553° W</td>
+                            </tr>
+                            <tr>
+                                <td>Birmingham</td>
+                                <td>52.4862° N</td>
+                                <td>1.8904° W</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header bg-black text-white">
+                <h3 class="card-title mb-0">
+                    <i class="fas fa-code me-2"></i>Technical Architecture
+                </h3>
+            </div>
+            <div class="card-body">
+                <h4>System Architecture</h4>
+                <div class="text-center my-4">
+                    <img src="{{ url_for('static', filename='images/architecture_diagram.jpg') }}" alt="System Architecture Diagram" class="img-fluid rounded" style="max-width: 900px; width: 100%;">
+                </div>
+                <h4>Key Components</h4>
+                <ul>
+                    <li><strong>Flask App:</strong> The main application that handles requests and renders templates</li>
+                    <li><strong>API Client:</strong> Handles communication with the OpenWeatherMap API</li>
+                    <li><strong>Weather Data Model:</strong> Represents and processes weather data</li>
+                    <li><strong>Cache Manager:</strong> Implements caching to improve performance</li>
+                    <li><strong>Error Handler:</strong> Provides error handling</li>
+                </ul>
+
+                <h4 class="mt-4">API Documentation</h4>
+                <p>
+                    The application provides two API endpoints for retrieving weather data:
+                </p>
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Endpoint</th>
+                                <th>Description</th>
+                                <th>Parameters</th>
+                                <th>Response</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>/api/weather/:location_name</code></td>
+                                <td>Get weather data for a specific location</td>
+                                <td><code>location_name</code>: Name of the location</td>
+                                <td>JSON with weather data</td>
+                            </tr>
+                            <tr>
+                                <td><code>/api/weather/all</code></td>
+                                <td>Get weather data for all locations</td>
+                                <td>None</td>
+                                <td>JSON with weather data for all locations</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Get current year for footer
+    document.addEventListener('DOMContentLoaded', function() {
+        window.now = {
+            year: new Date().getFullYear()
+        };
+    });
+</script>
+{% endblock %}

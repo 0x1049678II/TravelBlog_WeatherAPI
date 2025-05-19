@@ -1,0 +1,285 @@
+{% extends "base.html" %}
+
+{% block title %}Weather Dashboard - All Locations{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header bg-black text-white">
+                <h2 class="card-title mb-0">
+                    <i class="fas fa-tachometer-alt me-2"></i>Weather Dashboard
+                </h2>
+            </div>
+            <div class="card-body">
+                <p class="lead">
+                    Real-time weather information for all the outlined locations.
+                    This dashboard provides a comprehensive overview to help plan activities and optimize our hypothetical travel bloggers travel schedule.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header bg-black text-white">
+                <h3 class="card-title mb-0">
+                    <i class="fas fa-map me-2"></i>Interactive Map
+                </h3>
+            </div>
+            <div class="card-body p-0">
+                <div id="dashboard-map" class="map-container"></div>
+            </div>
+            <div class="card-footer">
+                <small class="text-muted">
+                    <i class="fas fa-info-circle me-1"></i>Click on a marker to see weather details for that location
+                </small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header bg-black text-white d-flex justify-content-between align-items-center">
+                <h3 class="card-title mb-0">
+                    <i class="fas fa-cloud-sun me-2"></i>Weather Overview
+                </h3>
+                <div>
+                    <button id="sort-temp-btn" class="btn btn-sm btn-light me-2">
+                        <i class="fas fa-temperature-high me-1"></i>Sort by Temperature
+                    </button>
+                    <button id="sort-alpha-btn" class="btn btn-sm btn-light">
+                        <i class="fas fa-sort-alpha-down me-1"></i>Sort Alphabetically
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-md-12">
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-search"></i></span>
+                            <input type="text" id="location-search" class="form-control" placeholder="Search locations...">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4" id="weather-cards-container">
+                    {% for location, weather in weather_data.items() %}
+                    <div class="col weather-card" data-location="{{ location|lower }}" data-temperature="{{ weather.temp }}">
+                        <div class="card dashboard-card weather-{{ weather.main_condition.main|lower }}">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <h5 class="card-title">{{ location }}</h5>
+                                    <img src="{{ weather.main_condition.icon_url }}" class="dashboard-icon" alt="{{ weather.main_condition.description }}">
+                                </div>
+
+                                <div class="dashboard-temp">{{ weather.temp }}°C</div>
+                                <div class="weather-description mb-3">{{ weather.main_condition.description }}</div>
+
+                                <div class="d-flex justify-content-between mb-2">
+                                    <div>
+                                        <i class="fas fa-tint text-primary"></i> {{ weather.humidity }}%
+                                    </div>
+                                    <div>
+                                        <i class="fas fa-wind text-primary"></i> {{ weather.wind_speed }} m/s
+                                        <span class="wind-arrow">{{ weather.wind_deg|wind_direction_arrow }}</span>
+                                    </div>
+                                </div>
+
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        <i class="fas fa-sun text-warning"></i> {{ weather.local_sunrise.strftime('%H:%M') }}
+                                    </div>
+                                    <div>
+                                        <i class="fas fa-moon text-dark"></i> {{ weather.local_sunset.strftime('%H:%M') }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <a href="{{ url_for('weather', location_name=location|lower|replace(' ', '-')) }}" class="btn btn-sm btn-primary">
+                                    <i class="fas fa-info-circle me-1"></i>Details
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header bg-black text-white">
+                <h3 class="card-title mb-0">
+                    <i class="fas fa-chart-bar me-2"></i>Weather Comparison
+                </h3>
+            </div>
+            <div class="card-body" style="max-height: 400px;">
+                <div style="height: 350px;">
+                    <canvas id="temperature-chart"></canvas>
+                </div>
+            </div>
+            <div class="card-footer">
+                <small class="text-muted">
+                    <i class="fas fa-info-circle me-1"></i>Visual comparison of temperatures across all locations
+                </small>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block head %}
+<!-- Chart.js for data visualization -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Get current year for footer
+    window.now = {
+        year: new Date().getFullYear()
+    };
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize map
+        const map = L.map('dashboard-map').setView([52.5, -1.5], 6); // Center on England
+
+        // Add tile layer
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        // Add weather layer if available
+        fetch(`https://tile.openweathermap.org/map/temp_new/{z}/{x}/{y}.png?appid={{ api_key }}`)
+            .then(response => {
+                if (response.ok) {
+                    L.tileLayer(`https://tile.openweathermap.org/map/temp_new/{z}/{x}/{y}.png?appid={{ api_key }}`, {
+                        opacity: 0.5
+                    }).addTo(map);
+                }
+            })
+            .catch(error => console.error('Error loading weather layer:', error));
+
+        // Add markers for each location
+        const locations = [
+            {% for location in locations %}
+            {
+                name: "{{ location.name }}",
+                lat: {{ location.lat }},
+                lon: {{ location.lon }},
+                weather: "{{ weather_data[location.name].main_condition.description if location.name in weather_data else 'Unknown' }}",
+                temp: "{{ weather_data[location.name].temp if location.name in weather_data else 'N/A' }}",
+                icon: "{{ weather_data[location.name].main_condition.icon_url if location.name in weather_data else '' }}"
+            },
+            {% endfor %}
+        ];
+
+        locations.forEach(location => {
+            const marker = L.marker([location.lat, location.lon]).addTo(map);
+
+            // Add popup with weather info
+            marker.bindPopup(`
+                <strong>${location.name}</strong><br>
+                ${location.temp}°C, ${location.weather}<br>
+                ${location.icon ? `<img src="${location.icon}" width="30" height="30" alt="${location.weather}">` : ''}
+                <br><a href="/weather/${location.name.toLowerCase().replace(/ /g, '-')}">View Details</a>
+            `);
+        });
+
+        // Temperature chart
+        const chartData = {
+            labels: [{% for location, weather in weather_data.items() %}"{{ location }}",{% endfor %}],
+            datasets: [
+                {
+                    label: 'Temperature (°C)',
+                    data: [{% for location, weather in weather_data.items() %}{{ weather.temp }},{% endfor %}],
+                    backgroundColor: 'rgba(0,0,0,0.5)',
+                    borderColor: 'rgb(0,0,0)',
+                    borderWidth: 1
+                },
+                {
+                    label: 'Feels Like (°C)',
+                    data: [{% for location, weather in weather_data.items() %}{{ weather.feels_like }},{% endfor %}],
+                    backgroundColor: 'rgba(46, 204, 113, 0.5)',
+                    borderColor: 'rgba(46, 204, 113, 1)',
+                    borderWidth: 1
+                }
+            ]
+        };
+
+        const chartConfig = {
+            type: 'bar',
+            data: chartData,
+            options: {
+                maintainAspectRatio: false,
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: false
+                    }
+                },
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    title: {
+                        display: true,
+                        text: 'Temperature Comparison Across Locations'
+                    }
+                }
+            }
+        };
+
+        const temperatureChart = new Chart(
+            document.getElementById('temperature-chart'),
+            chartConfig
+        );
+
+        // Search functionality
+        const searchInput = document.getElementById('location-search');
+        const weatherCards = document.querySelectorAll('.weather-card');
+
+        searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+
+            weatherCards.forEach(card => {
+                const locationName = card.dataset.location;
+                if (locationName.includes(searchTerm)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+
+        // Sorting functionality
+        const sortByTemp = document.getElementById('sort-temp-btn');
+        const sortAlpha = document.getElementById('sort-alpha-btn');
+        const cardsContainer = document.getElementById('weather-cards-container');
+
+        sortByTemp.addEventListener('click', function() {
+            const sortedCards = Array.from(weatherCards).sort((a, b) => {
+                return parseFloat(b.dataset.temperature) - parseFloat(a.dataset.temperature);
+            });
+
+            sortedCards.forEach(card => cardsContainer.appendChild(card));
+        });
+
+        sortAlpha.addEventListener('click', function() {
+            const sortedCards = Array.from(weatherCards).sort((a, b) => {
+                return a.dataset.location.localeCompare(b.dataset.location);
+            });
+
+            sortedCards.forEach(card => cardsContainer.appendChild(card));
+        });
+    });
+</script>
+{% endblock %}

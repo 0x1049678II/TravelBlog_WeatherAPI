@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block title %}Cam's weather API - Locations{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header bg-black text-white">
+                <h2 class="card-title mb-0">
+                    <i class="fas fa-map-marker-alt me-2"></i>Available Locations.
+                </h2>
+            </div>
+            <div class="card-body">
+                <p class="lead">
+                    Welcome to Cam's special weather blogging API bonanza! This app provides real-time weather data for each location on any travel bloggers itinerary in England. Select a location below to view detailed weather information.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+    {% for location in locations %}
+    <div class="col">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">{{ location }}</h5>
+                <p class="card-text">
+                    <i class="fas fa-map-pin me-2 text-primary"></i>Explore this beautiful location in England
+                </p>
+                <a href="{{ url_for('weather', location_name=location|lower|replace(' ', '-')) }}" class="btn btn-primary">
+                    <i class="fas fa-cloud-sun me-1"></i>View Weather
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header bg-black text-white">
+                <h3 class="card-title mb-0">
+                    <i class="fas fa-tachometer-alt me-2"></i>Dashboard View
+                </h3>
+            </div>
+            <div class="card-body">
+                <p>
+                    Want to see weather information for all locations at once? Check out my comprehensive dashboard.
+                </p>
+                <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">
+                    <i class="fas fa-chart-line me-1"></i>View Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Get the current timestamp for the footer
+    document.addEventListener('DOMContentLoaded', function() {
+        window.now = {
+            year: new Date().getFullYear()
+        };
+    });
+</script>
+{% endblock %}

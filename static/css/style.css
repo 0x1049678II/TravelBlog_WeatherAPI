@@ -1,0 +1,130 @@
+/*
+ * Custom CSS
+ * This contains additional styling
+ */
+
+/* Custom animations */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideIn {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+/* Apply animations to elements */
+.fade-in {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+.slide-in {
+    animation: slideIn 0.5s ease-in-out;
+}
+
+/* Custom weather condition styling */
+.weather-thunderstorm .card-body {
+    background: linear-gradient(135deg, #2c3e50, #4ca1af);
+    color: white;
+}
+
+.weather-drizzle .card-body {
+    background: linear-gradient(135deg, #89f7fe, #49a2f3);
+}
+
+.weather-rain .card-body {
+    background: linear-gradient(135deg, #5c258d, #4389a2);
+    color: white;
+}
+
+.weather-snow .card-body {
+    background: linear-gradient(135deg, #e6dada, #274046);
+}
+
+.weather-clear .card-body {
+    background: linear-gradient(135deg, #b9d3d3, #f0f8ff);
+}
+
+.weather-clouds .card-body {
+    background: linear-gradient(135deg, #8e9eab, #eef2f3);
+}
+
+.weather-fog .card-body,
+.weather-mist .card-body,
+.weather-haze .card-body {
+    background: linear-gradient(135deg, #757f9a, #d7dde8);
+}
+
+/* Hover effects for cards */
+.dashboard-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(227, 227, 227, 0.2);
+    transition: all 0.3s ease;
+}
+
+/* Responsive tweaks */
+@media (max-width: 768px) {
+    .dashboard-temp {
+        font-size: 1.5rem;
+    }
+
+    .card-header h2 {
+        font-size: 1.5rem;
+    }
+
+    .card-header h3 {
+        font-size: 1.2rem;
+    }
+}
+
+/* Print styles for blog format */
+@media print {
+    nav, footer, .btn {
+        display: none;
+    }
+
+    .blog-content {
+        font-size: 12pt;
+        color: #000;
+    }
+
+    .card {
+        border: none;
+        box-shadow: none;
+    }
+
+    .card-header {
+        background-color: transparent !important;
+        color: #000 !important;
+    }
+}
+
+/* Accessibility */
+.btn:focus,
+input:focus,
+a:focus {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+    :root {
+        --primary-color: #ffbf00;
+        --secondary-color: #000000;
+        --dark-color: #000000;
+        --light-color: #ffffff;
+        --warning-color: #ff8000;
+        --danger-color: #ff0000;
+    }
+
+    .card {
+        border: 2px solid #000;
+    }
+
+    .weather-condition-gradient {
+        background: white none !important;
+        color: black !important;
+    }
+}
